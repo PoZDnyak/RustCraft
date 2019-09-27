@@ -1,0 +1,7 @@
+name: RustCraftDev
+main: PoZDnyak.Main
+version: 1.0
+commands:
+  rc:
+    description: RustCraft info commands
+    usage: /rc
