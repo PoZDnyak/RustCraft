@@ -5,3 +5,4 @@ commands:
   rc:
     description: RustCraft info commands
     usage: /rc
+permission: rc.air

@@ -33,8 +33,12 @@ public class OtherHandler implements Listener {
     //шляпа
     @EventHandler
     public void use(PlayerInteractEvent e){
-        if(e.getAction()==Action.RIGHT_CLICK_AIR){
+
+        Action act = e.getAction();
+        if(!((act==Action.RIGHT_CLICK_AIR)||(act==Action.RIGHT_CLICK_BLOCK)))return;
+            if(!e.getPlayer().getInventory().getItemInHand().hasItemMeta())return;
+                if(!e.getPlayer().getInventory().getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("План Постройки"))return;
             e.getPlayer().openInventory(Methods.BuildingPlane);
-        }
+
     }
 }

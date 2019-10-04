@@ -1,6 +1,8 @@
 package PoZDnyak.Breaking;
 
 import PoZDnyak.Main;
+import PoZDnyak.Methods;
+import com.avaje.ebean.enhance.asm.commons.Method;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -35,9 +37,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.DARK_GREEN + "+5 Дерева");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 5; i++) {
-                            p.getInventory().addItem(new ItemStack(LOG));
-                        }
+                        Methods.addWood(5,p);
                         break;
                     }
                     case STONE_AXE: {
@@ -46,9 +46,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.DARK_GREEN + "+10 дерева");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 10; i++) {
-                            p.getInventory().addItem(new ItemStack(LOG));
-                        }
+                        Methods.addWood(10,p);
                         break;
                     }
                     case IRON_AXE: {
@@ -57,9 +55,17 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.DARK_GREEN + "+15 Дерева");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 15; i++) {
-                            p.getInventory().addItem(new ItemStack(LOG));
-                        }
+                        Methods.addWood(15,p);
+                        break;
+                    }
+                    case EGG: {
+                        if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
+                        e.setCancelled(true);
+                        b.setType(AIR);
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        p.sendMessage(ChatColor.DARK_GREEN + "+3 Дерева");
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        Methods.addWood(3,p);
                         break;
                     }
                     default: {
@@ -77,9 +83,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GOLD + "+2 Серы");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 2; i++) {
-                            p.getInventory().addItem(new ItemStack(GOLD_ORE));
-                        }
+                        Methods.addSulfur(2,p);
                         break;
                     }
                     case STONE_PICKAXE: {
@@ -88,9 +92,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GOLD + "+3 Серы");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 3; i++) {
-                            p.getInventory().addItem(new ItemStack(GOLD_ORE));
-                        }
+                        Methods.addSulfur(3,p);
                         break;
                     }
                     case IRON_PICKAXE: {
@@ -99,9 +101,17 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GOLD + "+4 Серы");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 4; i++) {
-                            p.getInventory().addItem(new ItemStack(GOLD_ORE));
-                        }
+                        Methods.addSulfur(4,p);
+                        break;
+                    }
+                    case EGG: {
+                        if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
+                        e.setCancelled(true);
+                        b.setType(AIR);
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        p.sendMessage(ChatColor.GOLD + "+1 Серы");
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        Methods.addSulfur(1,p);
                         break;
                     }
                     default: {
@@ -131,9 +141,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GRAY + "+3 Железной руды");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 3; i++) {
-                            p.getInventory().addItem(new ItemStack(IRON_ORE));
-                        }
+                        Methods.addIron(3,p);
                         break;
                     }
                     case STONE_PICKAXE: {
@@ -153,9 +161,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GRAY + "+5 Железной руды");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 5; i++) {
-                            p.getInventory().addItem(new ItemStack(IRON_ORE));
-                        }
+                        Methods.addIron(5,p);
                         break;
                     }
                     case IRON_PICKAXE: {
@@ -175,9 +181,17 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GRAY + "+7 Железной руды");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 7; i++) {
-                            p.getInventory().addItem(new ItemStack(IRON_ORE));
-                        }
+                        Methods.addIron(7,p);
+                        break;
+                    }
+                    case EGG: {
+                        if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
+                        e.setCancelled(true);
+                        b.setType(AIR);
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        p.sendMessage(ChatColor.GRAY + "+2 Железной руды");
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        Methods.addIron(2,p);
                         break;
                     }
                     default: {
@@ -196,9 +210,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GRAY + "+5 Камня");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 5; i++) {
-                            p.getInventory().addItem(new ItemStack(COBBLESTONE));
-                        }
+                        Methods.addStone(5,p);
                         break;
                     }
                     case STONE_PICKAXE: {
@@ -207,9 +219,7 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GRAY + "+10 Камня");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 10; i++) {
-                            p.getInventory().addItem(new ItemStack(COBBLESTONE));
-                        }
+                        Methods.addStone(10,p);
                         break;
                     }
                     case IRON_PICKAXE: {
@@ -218,9 +228,17 @@ public class BreakingBlocks implements Listener {
                         p.sendMessage(ChatColor.RED + "------------------");
                         p.sendMessage(ChatColor.GRAY + "+15 Камня");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        for (int i = 0; i < 15; i++) {
-                            p.getInventory().addItem(new ItemStack(COBBLESTONE));
-                        }
+                        Methods.addStone(15,p);
+                        break;
+                    }
+                    case EGG: {
+                        if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
+                        e.setCancelled(true);
+                        b.setType(AIR);
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        p.sendMessage(ChatColor.GRAY + "+3 Камня");
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        Methods.addStone(3,p);
                         break;
                     }
                     default: {

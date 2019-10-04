@@ -1,5 +1,6 @@
 package PoZDnyak;
 
+import PoZDnyak.Airdrop.Airdrop;
 import PoZDnyak.BlockingCraft.All;
 import PoZDnyak.Breaking.BreakingBlocks;
 import PoZDnyak.Privates.Privates;
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Foundation(this),this);
         Bukkit.getPluginManager().registerEvents(new All(this),this);
         Bukkit.getPluginManager().registerEvents(new SpawnResources(this),this);
+        Bukkit.getPluginManager().registerEvents(new Airdrop(this),this);
         getCommand("rc").setExecutor(new Command(this));
         Methods.Addlore();
         Methods.gui();
