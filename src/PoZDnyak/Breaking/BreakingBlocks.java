@@ -2,7 +2,6 @@ package PoZDnyak.Breaking;
 
 import PoZDnyak.Main;
 import PoZDnyak.Methods;
-import com.avaje.ebean.enhance.asm.commons.Method;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,7 +30,7 @@ public class BreakingBlocks implements Listener {
             case LOG: {
                 //каким инструментом ломает дерево(деревянный,каменный,железный)
                 switch (hand.getType()) {
-                    case WOOD_AXE: {
+                    case STONE_AXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -40,7 +39,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addWood(5,p);
                         break;
                     }
-                    case STONE_AXE: {
+                    case IRON_AXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -49,7 +48,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addWood(10,p);
                         break;
                     }
-                    case IRON_AXE: {
+                    case GOLD_AXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -58,7 +57,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addWood(15,p);
                         break;
                     }
-                    case EGG: {
+                    case WOOD_PICKAXE: {
                         if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
                         e.setCancelled(true);
                         b.setType(AIR);
@@ -77,7 +76,7 @@ public class BreakingBlocks implements Listener {
             }
             case GOLD_ORE: {
                 switch (hand.getType()) {
-                    case WOOD_PICKAXE: {
+                    case STONE_PICKAXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -86,7 +85,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addSulfur(2,p);
                         break;
                     }
-                    case STONE_PICKAXE: {
+                    case IRON_PICKAXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -95,7 +94,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addSulfur(3,p);
                         break;
                     }
-                    case IRON_PICKAXE: {
+                    case GOLD_PICKAXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -104,7 +103,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addSulfur(4,p);
                         break;
                     }
-                    case EGG: {
+                    case WOOD_PICKAXE: {
                         if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
                         e.setCancelled(true);
                         b.setType(AIR);
@@ -124,26 +123,6 @@ public class BreakingBlocks implements Listener {
             }
             case IRON_ORE: {
                 switch (hand.getType()) {
-                    case WOOD_PICKAXE: {
-                        double chanse = Math.random()*100;
-                        if(chanse>=80){
-                            double rand = (Math.random() * +2) + 1;
-                            int rand1 = (int)rand;
-                            p.sendMessage(ChatColor.RED+"------------------");
-                            p.sendMessage(ChatColor.GRAY + "+"+rand1+" High Quality Metal");
-                            p.sendMessage(ChatColor.RED+"------------------");
-                            for(int j=0;j<rand1;j++) {
-                                p.getInventory().addItem(new ItemStack(CLAY_BALL));
-                            }
-                        }
-                        e.setCancelled(true);
-                        b.setType(AIR);
-                        p.sendMessage(ChatColor.RED + "------------------");
-                        p.sendMessage(ChatColor.GRAY + "+3 Железной руды");
-                        p.sendMessage(ChatColor.RED + "------------------");
-                        Methods.addIron(3,p);
-                        break;
-                    }
                     case STONE_PICKAXE: {
                         double chanse = Math.random()*100;
                         if(chanse>=80){
@@ -152,16 +131,14 @@ public class BreakingBlocks implements Listener {
                             p.sendMessage(ChatColor.RED+"------------------");
                             p.sendMessage(ChatColor.GRAY + "+"+rand1+" High Quality Metal");
                             p.sendMessage(ChatColor.RED+"------------------");
-                            for(int j=0;j<rand1;j++) {
-                                p.getInventory().addItem(new ItemStack(CLAY_BALL));
-                            }
+                            Methods.addHQM(rand1,p);
                         }
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
-                        p.sendMessage(ChatColor.GRAY + "+5 Железной руды");
+                        p.sendMessage(ChatColor.GRAY + "+3 Железной руды");
                         p.sendMessage(ChatColor.RED + "------------------");
-                        Methods.addIron(5,p);
+                        Methods.addIron(3,p);
                         break;
                     }
                     case IRON_PICKAXE: {
@@ -172,9 +149,25 @@ public class BreakingBlocks implements Listener {
                             p.sendMessage(ChatColor.RED+"------------------");
                             p.sendMessage(ChatColor.GRAY + "+"+rand1+" High Quality Metal");
                             p.sendMessage(ChatColor.RED+"------------------");
-                            for(int j=0;j<rand1;j++) {
-                                p.getInventory().addItem(new ItemStack(CLAY_BALL));
-                            }
+                            Methods.addHQM(rand1,p);
+                        }
+                        e.setCancelled(true);
+                        b.setType(AIR);
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        p.sendMessage(ChatColor.GRAY + "+5 Железной руды");
+                        p.sendMessage(ChatColor.RED + "------------------");
+                        Methods.addIron(5,p);
+                        break;
+                    }
+                    case GOLD_PICKAXE: {
+                        double chanse = Math.random()*100;
+                        if(chanse>=80){
+                            double rand = (Math.random() * +2) + 1;
+                            int rand1 = (int)rand;
+                            p.sendMessage(ChatColor.RED+"------------------");
+                            p.sendMessage(ChatColor.GRAY + "+"+rand1+" High Quality Metal");
+                            p.sendMessage(ChatColor.RED+"------------------");
+                            Methods.addHQM(rand1,p);
                         }
                         e.setCancelled(true);
                         b.setType(AIR);
@@ -184,7 +177,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addIron(7,p);
                         break;
                     }
-                    case EGG: {
+                    case WOOD_PICKAXE: {
                         if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
                         e.setCancelled(true);
                         b.setType(AIR);
@@ -204,7 +197,7 @@ public class BreakingBlocks implements Listener {
             }
             case COBBLESTONE: {
                 switch (hand.getType()) {
-                    case WOOD_PICKAXE: {
+                    case STONE_PICKAXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -213,7 +206,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addStone(5,p);
                         break;
                     }
-                    case STONE_PICKAXE: {
+                    case IRON_PICKAXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -222,7 +215,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addStone(10,p);
                         break;
                     }
-                    case IRON_PICKAXE: {
+                    case GOLD_PICKAXE: {
                         e.setCancelled(true);
                         b.setType(AIR);
                         p.sendMessage(ChatColor.RED + "------------------");
@@ -231,7 +224,7 @@ public class BreakingBlocks implements Listener {
                         Methods.addStone(15,p);
                         break;
                     }
-                    case EGG: {
+                    case WOOD_PICKAXE: {
                         if(!hand.getItemMeta().getDisplayName().equalsIgnoreCase("Камень (Rock)")) {e.setCancelled(true);break;}
                         e.setCancelled(true);
                         b.setType(AIR);

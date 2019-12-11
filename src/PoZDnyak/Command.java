@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static PoZDnyak.Methods.Crafting;
 import static PoZDnyak.Methods.Project_Name_Prefix;
 
 public class Command implements CommandExecutor {
@@ -26,6 +25,9 @@ public class Command implements CommandExecutor {
     private Main plugin;
     public Command(Main plugin) {
         this.plugin = plugin;
+    }
+
+    public Command() {
     }
 
 

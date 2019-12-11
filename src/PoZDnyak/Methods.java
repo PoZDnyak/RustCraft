@@ -5,192 +5,56 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
 
 
 public class Methods extends Command {
-    private Main plugin;
+
+    private static Main plugin;
+
+    public Methods(Main plugin) {
+        this.plugin = plugin;
+    }
+
+    //для апдейта
+    public static HashMap<Player, Location> lastBlocks = new HashMap<>();
+    public static HashMap<Player, Boolean> can = new HashMap<>();
+    public static HashMap<Player, Integer> vector = new HashMap<>();
+    public static HashMap<Player, Boolean> accessFoundation = new HashMap<>();
+    public static HashMap<Player, Location> lastBlockFoundation = new HashMap<>();
+
+    //вещи в план постройки для заполнения
+    public static ItemStack wall = new ItemStack(Material.PAPER);
+    public static ItemStack foundation = new ItemStack(Material.PAPER);
+    public static ItemStack stairs = new ItemStack(Material.PAPER);
+
+    //вещь для гуишки с крафтами
+    public static ItemStack itemWithCrafts = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
+    //инвентарь со всеми крафтами
+    public static Inventory guiCrafts = Bukkit.createInventory(null, 9 * 6, ChatColor.RED + "[" + ChatColor.GOLD + ChatColor.BOLD + "RC" + ChatColor.RED + "] " + "Меню крафтов");
 
 
-    public static ItemStack build = new ItemStack(Material.PAPER);
     public static ItemStack furnance = new ItemStack(Material.FURNACE);
-    public static ItemStack noth = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 8);
-    public static Inventory Crafting = Bukkit.createInventory(null, 36, ChatColor.AQUA + "[RC] " + ChatColor.GREEN + "Крафтинг");
+    public static ItemStack gray_glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7);
     ////айтемы в план постройки (мета)
-    public static Inventory BuildingPlane = Bukkit.createInventory(null, 9, ChatColor.AQUA + "[RC] " + ChatColor.GREEN + "План постройки");
-    public static ItemStack Build_Menu_Foundation = new ItemStack(Material.PAPER);
-    public static ItemStack Build_Menu_Wall = new ItemStack(Material.PAPER);
-    ////айтемы для установки(вещь)
-    public static ItemStack Foundation_item = new ItemStack(Material.STONE_PLATE);
+    public static Inventory BuildingPlane = Bukkit.createInventory(null, 9 * 6, ChatColor.RED + "[" + ChatColor.GOLD + ChatColor.BOLD + "RC" + ChatColor.RED + "] " + "План постройки");
     ////Название проекта
     public static String Project_Name_Prefix = ChatColor.RED + "[" + ChatColor.GOLD + ChatColor.BOLD + "RC" + ChatColor.RED + "] ";
     //КФГ шкафов
 
-
-    public Methods(Main main) {
-        super(main);
-    }
-
-    public static void Addlore() {
-        //Фундамент
-        BuilPl.add(0, "--------------------");
-        BuilPl.add(1, "Для постройки дома");
-        BuilPl.add(2, "Цена:");
-        BuilPl.add(3, "5 дерева");
-
-
-        Furnance.add(0, "--------------------");
-        Furnance.add(1, "Для переплавки ресурсов");
-        Furnance.add(2, "Цена:");
-        Furnance.add(3, "30 дерева");
-        Furnance.add(4, "15 камня");
-        Furnance.add(5, "5 ТНК");
-
-
-        Foundation.add(0, "--------------------");
-        Foundation.add(1, "Фундамент");
-        Foundation.add(2, "Цена:");
-        Foundation.add(3, "200 дерева");
-        Foundation.add(4, "150 камня");
-        Foundation.add(5, "100 железа");
-
-
-        Wall.add(0, "--------------------");
-        Wall.add(1, "Стена");
-        Wall.add(2, "Цена:");
-        Wall.add(3, "150 дерева");
-        Wall.add(4, "100 камня");
-        Wall.add(5, "50 железа");
-    }//добавление лора
-
-    public static void Clearlore() {
-        if (build.hasItemMeta()) {
-            build.getItemMeta().getLore().clear();
-        } else return;
-        if (furnance.hasItemMeta()) {
-            furnance.getItemMeta().getLore().clear();
-        } else return;
-    }//очистка лора
-
-    public static void X(Block b, Player p) {
-        int x = b.getX();
-        int y = b.getY();
-        int z = b.getZ();
-        Location loc = b.getLocation();
-        int i;
-        loc.setX(loc.getX() - 3);
-        for (i = 0; i < 5; i++) {
-            loc.setX(loc.getX() + 1);
-            Bukkit.getWorld("world").getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).setType(Material.STONE);
-        }
-        int j;
-        loc.setZ(loc.getZ() + 1);
-        loc.setX(loc.getX() - 5);
-        for (j = 0; j < 5; j++) {
-            loc.setX(loc.getX() + 1);
-            Bukkit.getWorld("world").getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).setType(Material.STONE);
-        }
-        int q;
-        loc.setZ(loc.getZ() + 1);
-        loc.setX(loc.getX() - 5);
-        for (q = 0; q < 5; q++) {
-            loc.setX(loc.getX() + 1);
-            Bukkit.getWorld("world").getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).setType(Material.STONE);
-        }
-        int c;
-        loc.setZ(loc.getZ() + 1);
-        loc.setX(loc.getX() - 5);
-        for (c = 0; c < 5; c++) {
-            loc.setX(loc.getX() + 1);
-            Bukkit.getWorld("world").getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).setType(Material.STONE);
-        }
-        int m;
-        loc.setZ(loc.getZ() + 1);
-        loc.setX(loc.getX() - 5);
-        for (m = 0; m < 5; m++) {
-            loc.setX(loc.getX() + 1);
-            Bukkit.getWorld("world").getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).setType(Material.STONE);
-        }
-
-        p.sendMessage(ChatColor.AQUA + "Вы установили" + ChatColor.RED + " Фундамент");
-        return;
-    }//установка фундамента
-
-    public static void gui() {
-        //////создать гуи
-        ////////создать айтемы
-        ItemMeta build_meta = build.getItemMeta();
-        ItemMeta furnance_meta = furnance.getItemMeta();
-        ItemMeta nm1 = noth.getItemMeta();
-
-
-        ///////создать айтемам название
-        build_meta.setDisplayName(ChatColor.BLUE + "План постройки");
-        build_meta.setLore(BuilPl);
-        build.setItemMeta(build_meta);
-
-        furnance_meta.setDisplayName(ChatColor.BLUE + "Печь");
-        furnance_meta.setLore(Furnance);
-        furnance.setItemMeta(furnance_meta);
-
-        nm1.setDisplayName(ChatColor.RED + "...");
-        noth.setItemMeta(nm1);
-        Crafting.setItem(19, build);
-        Crafting.setItem(20, furnance);
-
-        for (int i = 0; i < 36; i++) {
-            if (Crafting.getItem(i) == null) {
-                Crafting.setItem(i, noth);
-
-            }
-        }
-    }//Создание основного гуи и его аддонов
-
-    public static void BuildPlane() {
-        //берем меты
-        ItemMeta Build_Menu_Meta_Foundation = Build_Menu_Foundation.getItemMeta();
-        ItemMeta Build_Menu_Meta_Wall = Build_Menu_Wall.getItemMeta();
-        ItemMeta nothink = noth.getItemMeta();
-        ///////Установка Имени и описания
-        Build_Menu_Meta_Foundation.setDisplayName(ChatColor.BLUE + "Фундамент");
-        Build_Menu_Meta_Foundation.setLore(Foundation);
-        Build_Menu_Foundation.setItemMeta(Build_Menu_Meta_Foundation);
-        ///////Стенка
-        Build_Menu_Meta_Wall.setDisplayName(ChatColor.BLUE + "Стена");
-        Build_Menu_Meta_Wall.setLore(Wall);
-        Build_Menu_Wall.setItemMeta(Build_Menu_Meta_Wall);
-
-
-        nothink.setDisplayName(ChatColor.RED + "...");
-        noth.setItemMeta(nothink);
-        BuildingPlane.setItem(1, Build_Menu_Foundation);
-        BuildingPlane.setItem(3, Build_Menu_Wall);
-
-        for (int i = 0; i < 45; i++) {
-            if (BuildingPlane.getItem(i) == null) {
-                BuildingPlane.setItem(i, noth);
-
-            } else return;
-        }
-    }//Создание гуи плана постройки
-
-    public static void Foundation_create() {
-        ItemMeta Foundation_Meta = Foundation_item.getItemMeta();
-        if (Foundation_Meta.hasDisplayName()) return;
-        Foundation_Meta.setDisplayName("Фундамент");
-        Foundation_item.setItemMeta(Foundation_Meta);
-    }
 
     public static void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
         try {
@@ -209,6 +73,7 @@ public class Methods extends Command {
             p.getInventory().addItem(sulfur);
         }
     }
+
     public static void addStone(int s, Player p) {
         ItemStack stone = new ItemStack(Material.COBBLESTONE);
         ItemMeta meta = stone.getItemMeta();
@@ -218,6 +83,7 @@ public class Methods extends Command {
             p.getInventory().addItem(stone);
         }
     }
+
     public static void addIron(int s, Player p) {
         ItemStack iron = new ItemStack(Material.IRON_ORE);
         ItemMeta meta = iron.getItemMeta();
@@ -227,8 +93,9 @@ public class Methods extends Command {
             p.getInventory().addItem(iron);
         }
     }
+
     public static void addWood(int s, Player p) {
-        ItemStack wood = new ItemStack(Material.WOOD);
+        ItemStack wood = new ItemStack(Material.LOG);
         ItemMeta meta = wood.getItemMeta();
         meta.setDisplayName("Дерево");
         wood.setItemMeta(meta);
@@ -236,6 +103,7 @@ public class Methods extends Command {
             p.getInventory().addItem(wood);
         }
     }
+
     public static void addSulfurChest(int s, Chest p) {
         ItemStack sulfur = new ItemStack(Material.GOLD_ORE);
         ItemMeta meta = sulfur.getItemMeta();
@@ -245,9 +113,675 @@ public class Methods extends Command {
             p.getBlockInventory().addItem(sulfur);
         }
     }
+
+    public static void addHQM(int s, Player p) {
+        ItemStack HQM = new ItemStack(Material.CLAY_BALL);
+        ItemMeta meta = HQM.getItemMeta();
+        meta.setDisplayName("Руда Высокого Качества");
+        HQM.setItemMeta(meta);
+        for (int i = 0; i < s; i++) {
+            p.getInventory().addItem(HQM);
+        }
+    }
+
+    public static void craftItem(String item, Player p) {
+        p.sendMessage(Methods.Project_Name_Prefix + " " + item + " был создан");
+    }
+
+    public static void recipes() {
+        ShapedRecipe recipe = new ShapedRecipe(new ItemStack(Material.PAPER));
+        recipe.shape("EE ", "EE ", "   ");
+        recipe.setIngredient('E', Material.LOG);
+        Bukkit.addRecipe(recipe);
+    }
+
+    public static void fullBuildingPlane() {
+        Inventory inv = Methods.BuildingPlane;
+
+        ItemStack wall = Methods.wall;
+        ItemStack foundation = Methods.foundation;
+        ItemStack stairs = Methods.stairs;
+
+        ItemMeta FoundationMeta = foundation.getItemMeta();
+        ItemMeta WallMeta = wall.getItemMeta();
+        ItemMeta StairsMeta = stairs.getItemMeta();
+
+        FoundationMeta.setDisplayName("Фундамент");
+        WallMeta.setDisplayName("Стена");
+        StairsMeta.setDisplayName("Ступеньки");
+
+        wall.setItemMeta(WallMeta);
+        foundation.setItemMeta(FoundationMeta);
+        stairs.setItemMeta(StairsMeta);
+
+        inv.setItem(3, foundation);
+        inv.setItem(4, wall);
+        inv.setItem(11, stairs);
+
+
+        for (int i = 0; i < 9 * 6; i++) {
+            if (inv.getItem(i) == null) {
+                inv.setItem(i, Methods.gray_glass);
+            } else {
+                continue;
+            }
+        }
+    }
+
+    public static void fullCraftsGui() {
+        Inventory inv = Methods.guiCrafts;
+
+        inv.setItem(10, Methods.itemBuildingPlane());
+        inv.setItem(11, Methods.itemKiyanka());
+        inv.setItem(12, Methods.itemChest());
+        inv.setItem(13, Methods.itemStoneAxe());
+        inv.setItem(14, Methods.itemStonePickAxe());
+        inv.setItem(15, Methods.itemMetalDoor());
+        inv.setItem(16, Methods.itemHeavyDoor());
+
+
+        for (int i = 0; i < 9 * 6; i++) {
+            if (inv.getItem(i) == null) {
+                inv.setItem(i, Methods.gray_glass);
+            } else {
+                continue;
+            }
+        }
+    }
+
+
+    public static void setFoundation(Block b, Player p) {
+
+        Location loc = b.getLocation();
+        for (int a = -2; a < 3; a++) {
+            if (a != 0)
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() - 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).setType(Material.LOG);
+            else
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() - 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).setType(Material.WOOL);
+        }
+        for (int a = -2; a < 3; a++) {
+            if (a != 0)
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 2).setType(Material.LOG);
+            else
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 2).setType(Material.WOOL);
+        }
+        for (int a = -2; a < 3; a++) {
+            if (a != 0)
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).setType(Material.LOG);
+            else
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).setType(Material.WOOL);
+        }
+        for (int a = -2; a < 3; a++) {
+            Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).setType(Material.LOG);
+        }
+        for (int a = -1; a < 2; a++) {
+            Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 1).setType(Material.HAY_BLOCK);
+
+        }
+        for (int a = -1; a < 2; a++) {
+            if (a != 0)
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).setType(Material.LOG);
+            else
+                Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).setType(Material.WOOL);
+
+        }
+        for (int a = -1; a < 2; a++) {
+            Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ()).setType(Material.HAY_BLOCK);
+
+        }
+        for (int a = -1; a < 2; a++) {
+            Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 1).setType(Material.HAY_BLOCK);
+
+        }
+
+
+        p.sendMessage(ChatColor.AQUA + "Вы установили" + ChatColor.RED + " Фундамент");
+    }
+
+    public static boolean checkFoundation(Block b, Player p) {
+
+        Location loc = b.getLocation();
+        for (int a = -2; a < 3; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() - 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() - 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+        }
+        for (int a = -2; a < 3; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 2).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 2).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+        }
+        for (int a = -2; a < 3; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + 2, loc.getBlockY() + 1, loc.getBlockZ() + (a)).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+        }
+        for (int a = -2; a < 3; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+        }
+        for (int a = -1; a < 2; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 1).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 1).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+
+        }
+        for (int a = -1; a < 2; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() + 2).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+
+        }
+        for (int a = -1; a < 2; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ()).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ()).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+
+        }
+        for (int a = -1; a < 2; a++) {
+            if ((Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 1).getType() == Material.AIR) || (Bukkit.getWorld("world").getBlockAt(loc.getBlockX() + (a), loc.getBlockY() + 1, loc.getBlockZ() - 1).getType() == Material.LONG_GRASS)) {
+                continue;
+            } else {
+                p.sendMessage(Methods.Project_Name_Prefix + "Место не ровное");
+                return (false);
+            }
+
+        }
+
+
+        return (true);
+    }
+
+
+    public static BlockFace getDirection(float yaw) {
+        BlockFace[] AXIS = {
+                BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH
+        };
+        return AXIS[Math.round(yaw / 90f) & 0x3];
+    }
+
+
+    public static void checkWallWest(Block b, Player p) {
+        if (lastBlocks.containsKey(p)) {//есть ли до этого блок
+            Location nowLoc = b.getLocation();
+            nowLoc.setY(b.getY() + 1);
+            nowLoc.setX(nowLoc.getX() + 2);
+            if (lastBlocks.get(p).getBlock().getLocation().getX() == nowLoc.getX()) {//проверка старая ли локация==новой
+                if (lastBlocks.get(p).getBlock().getLocation().getZ() == nowLoc.getZ()) {
+                    return;
+                }
+            }
+
+            Location clear = lastBlocks.get(p);//берем старую локу
+            clear.setX(clear.getX() - 4);
+            clear.setX(clear.getX() - 1);
+            for (int s = 0; s <= 4; s++) {
+                if (s != 0) {
+                    clear.setX(clear.getX() - 7);
+                    clear.setY(clear.getY() + 1);
+                }
+                for (int i = 0; i <= 6; i++) {
+                    clear.getBlock().getState().update(true);
+                    clear.setX(clear.getX() + 1);
+                }
+            }
+
+            Methods.vector.remove(p);
+            lastBlocks.remove(p);
+        }
+
+        Location Up = b.getLocation();
+        Up.setX(Up.getX() + 3);
+        boolean check = true;
+        for (int s = 0; s <= 3; s++) {
+            Up.setY(Up.getY() + 1);
+            Up.setX(Up.getX() - 5);
+            for (int i = 0; i <= 4; i++) {
+                if (!Up.getBlock().getType().equals(Material.AIR)) {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 14);
+                    check = false;
+                } else {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 5);
+                }
+                Up.setX(Up.getX() + 1);
+            }
+        }
+        Methods.can.put(p, check);
+        Up.setY(Up.getY() - 3);
+        lastBlocks.put(p, Up);
+        Methods.vector.put(p, 1);
+
+
+    }
+
+    public static void checkWallEast(Block b, Player p) {
+        if (lastBlocks.containsKey(p)) {//есть ли до этого блок
+            Location nowLoc = b.getLocation();
+            nowLoc.setY(b.getY() + 1);
+            nowLoc.setX(nowLoc.getX() + 2);
+            if (lastBlocks.get(p).getBlock().getLocation().getX() == nowLoc.getX()) {//проверка старая ли локация==новой
+                if (lastBlocks.get(p).getBlock().getLocation().getZ() == nowLoc.getZ()) {
+                    return;
+                }
+            }
+
+            Location clear = lastBlocks.get(p);//берем старую локу
+            clear.setX(clear.getX() + 5);
+            for (int s = 0; s <= 4; s++) {
+                if (s != 0) {
+                    clear.setX(clear.getX() + 7);
+                    clear.setY(clear.getY() + 1);
+                }
+                for (int i = 0; i <= 6; i++) {
+                    clear.getBlock().getState().update(true);
+                    clear.setX(clear.getX() - 1);
+                }
+            }
+
+            Methods.vector.remove(p);
+            lastBlocks.remove(p);
+
+        }
+
+        Location Up = b.getLocation();
+        Up.setX(Up.getX() - 3);
+        boolean check = true;
+        for (int s = 0; s <= 3; s++) {
+            Up.setY(Up.getY() + 1);
+            Up.setX(Up.getX() + 5);
+            for (int i = 0; i <= 4; i++) {
+                if (!Up.getBlock().getType().equals(Material.AIR)) {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 14);
+                    check = false;
+                } else {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 5);
+                }
+                Up.setX(Up.getX() - 1);
+            }
+        }
+        Methods.can.put(p, check);
+        Up.setY(Up.getY() - 3);
+        lastBlocks.put(p, Up);
+        Methods.vector.put(p, 2);
+
+
+    }
+
+    public static void checkWallSouth(Block b, Player p) {
+        if (lastBlocks.containsKey(p)) {//есть ли до этого блок
+            Location nowLoc = b.getLocation();
+            nowLoc.setY(b.getY() + 1);
+            nowLoc.setZ(nowLoc.getZ() + 2);
+            if (lastBlocks.get(p).getBlock().getLocation().getZ() == nowLoc.getZ()) {//проверка старая ли локация==новой
+                if (lastBlocks.get(p).getBlock().getLocation().getZ() == nowLoc.getZ()) {
+                    return;
+                }
+            }
+
+            Location clear = lastBlocks.get(p);//берем старую локу
+            clear.setZ(clear.getZ() + 5);
+            for (int s = 0; s <= 4; s++) {
+                if (s != 0) {
+                    clear.setZ(clear.getZ() + 7);
+                    clear.setY(clear.getY() + 1);
+                }
+                for (int i = 0; i <= 6; i++) {
+                    clear.getBlock().getState().update(true);
+                    clear.setZ(clear.getZ() - 1);
+                }
+            }
+
+
+            lastBlocks.remove(p);
+        }
+
+        Location Up = b.getLocation();
+        Up.setZ(Up.getZ() - 3);
+        boolean check = true;
+        for (int s = 0; s <= 3; s++) {
+            Up.setY(Up.getY() + 1);
+            Up.setZ(Up.getZ() + 5);
+            for (int i = 0; i <= 4; i++) {
+                if (!Up.getBlock().getType().equals(Material.AIR)) {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 14);
+                    check = false;
+                } else {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 5);
+                }
+                Up.setZ(Up.getZ() - 1);
+            }
+        }
+        Methods.can.put(p, check);
+        Up.setY(Up.getY() - 3);
+        lastBlocks.put(p, Up);
+        Methods.vector.put(p, 1);
+
+
+    }
+
+    public static void checkWallNorth(Block b, Player p) {
+        if (lastBlocks.containsKey(p)) {//есть ли до этого блок
+            Location nowLoc = b.getLocation();
+            nowLoc.setY(b.getY() + 1);
+            nowLoc.setZ(nowLoc.getZ() - 2);
+            if (lastBlocks.get(p).getBlock().getLocation().getZ() == nowLoc.getZ()) {//проверка старая ли локация==новой
+                if (lastBlocks.get(p).getBlock().getLocation().getZ() == nowLoc.getZ()) {
+                    return;
+                }
+            }
+
+            Location clear = lastBlocks.get(p);//берем старую локу
+            clear.setZ(clear.getZ() - 5);
+            for (int s = 0; s <= 4; s++) {
+                if (s != 0) {
+                    clear.setZ(clear.getZ() - 7);
+                    clear.setY(clear.getY() + 1);
+                }
+                for (int i = 0; i <= 6; i++) {
+                    clear.getBlock().getState().update(true);
+                    clear.setZ(clear.getZ() + 1);
+                }
+            }
+
+
+            lastBlocks.remove(p);
+            Methods.vector.remove(p);
+        }
+        Location Up = b.getLocation();
+        Up.setZ(Up.getZ() + 3);
+        boolean check = true;
+        for (int s = 0; s <= 3; s++) {
+            Up.setY(Up.getY() + 1);
+            Up.setZ(Up.getZ() - 5);
+            for (int i = 0; i <= 4; i++) {
+                if (!Up.getBlock().getType().equals(Material.AIR)) {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 14);
+                    check = false;
+                } else {
+                    p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 5);
+                }
+                Up.setZ(Up.getZ() + 1);
+            }
+        }
+        Methods.can.put(p, check);
+        Up.setY(Up.getY() - 3);
+        lastBlocks.put(p, Up);
+        Methods.vector.put(p, 4);
+
+
+    }
+
+    public static void buildWallWest(Block b, Player p) {
+        Location clear = lastBlocks.get(p);//берем старую локу
+        clear.setX(clear.getX() - 5);
+        for (int s = 0; s <= 3; s++) {
+            if (s != 0) {
+                clear.setX(clear.getX() - 5);
+                clear.setY(clear.getY() + 1);
+            }
+            for (int i = 0; i <= 4; i++) {
+                clear.getBlock().setType(Material.HAY_BLOCK);
+                clear.setX(clear.getX() + 1);
+            }
+        }
+    }
+
+    public static void buildWallEast(Block b, Player p) {
+        Location clear = lastBlocks.get(p);//берем старую локу
+        clear.setX(clear.getX() + 5);
+        for (int s = 0; s <= 4; s++) {
+            if (s != 0) {
+                clear.setX(clear.getX() + 7);
+                clear.setY(clear.getY() + 1);
+            }
+            for (int i = 0; i <= 6; i++) {
+                clear.getBlock().setType(Material.HAY_BLOCK);
+                clear.setX(clear.getX() - 1);
+            }
+        }
+    }
+
+    public static void buildWallSouth(Block b, Player p) {
+        Location Up = b.getLocation();
+        Up.setY(Up.getY() - 1);
+        for (int s = 0; s <= 3; s++) {
+            Up.setY(Up.getY() + 1);
+            Up.setZ(Up.getZ() + 5);
+            for (int i = 0; i <= 4; i++) {
+                Up.getBlock().setType(Material.HAY_BLOCK);
+                Up.setZ(Up.getZ() - 1);
+            }
+        }
+    }
+
+    public static void buildWallNorth(Block b, Player p) {
+        Location Up = b.getLocation();
+        Up.setY(Up.getY() - 1);
+        for (int s = 0; s <= 3; s++) {
+            Up.setY(Up.getY() + 1);
+            Up.setZ(Up.getZ() - 5);
+            for (int i = 0; i <= 4; i++) {
+                Up.getBlock().setType(Material.HAY_BLOCK);
+                Up.setZ(Up.getZ() + 1);
+            }
+        }
+    }
+
+    public static void clear(Block b, Player p) {
+        if (!Methods.vector.containsKey(p)) return;
+        switch (Methods.vector.get(p)) {
+            case 1: {
+                Location clear = lastBlocks.get(p);//берем старую локу
+                clear.setX(clear.getX() - 4);
+                clear.setX(clear.getX() - 1);
+                for (int s = 0; s <= 4; s++) {
+                    if (s != 0) {
+                        clear.setX(clear.getX() - 7);
+                        clear.setY(clear.getY() + 1);
+                    }
+                    for (int i = 0; i <= 6; i++) {
+                        clear.getBlock().getState().update(true);
+                        clear.setX(clear.getX() + 1);
+                    }
+                }
+            }
+            case 2: {
+                Location clear = lastBlocks.get(p);//берем старую локу
+                clear.setX(clear.getX() + 5);
+                for (int s = 0; s <= 4; s++) {
+                    if (s != 0) {
+                        clear.setX(clear.getX() + 7);
+                        clear.setY(clear.getY() + 1);
+                    }
+                    for (int i = 0; i <= 6; i++) {
+                        clear.getBlock().getState().update(true);
+                        clear.setX(clear.getX() - 1);
+                    }
+                }
+            }
+            case 3: {
+                Location Up = b.getLocation();
+                Up.setZ(Up.getZ() - 3);
+                boolean check = true;
+                for (int s = 0; s <= 3; s++) {
+                    Up.setY(Up.getY() + 1);
+                    Up.setZ(Up.getZ() + 5);
+                    for (int i = 0; i <= 4; i++) {
+                        if (!Up.getBlock().getType().equals(Material.AIR)) {
+                            p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 14);
+                            check = false;
+                        } else {
+                            p.sendBlockChange(Up, Material.STAINED_GLASS, (byte) 5);
+                        }
+                        Up.setZ(Up.getZ() - 1);
+                    }
+                }
+            }
+            case 4: {
+                Location clear = lastBlocks.get(p);//берем старую локу
+                clear.setZ(clear.getZ() - 5);
+                for (int s = 0; s <= 4; s++) {
+                    if (s != 0) {
+                        clear.setZ(clear.getZ() - 7);
+                        clear.setY(clear.getY() + 1);
+                    }
+                    for (int i = 0; i <= 6; i++) {
+                        clear.getBlock().getState().update(true);
+                        clear.setZ(clear.getZ() + 1);
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    //выдача айтемов
+    public static void sendBuildingPlane(Player p) {
+
+
+    }
+
+    //айтемы из GUI
+    public static ItemStack itemBuildingPlane() {
+        ItemStack buildingPlane = new ItemStack(Material.PAPER, 1);
+
+        ItemMeta buildingPlaneMeta = buildingPlane.getItemMeta();
+
+        buildingPlaneMeta.setDisplayName("План постройки");
+
+        buildingPlaneMeta.setLore(Collections.singletonList("10 Дерева"));
+
+        buildingPlane.setItemMeta(buildingPlaneMeta);
+
+        return buildingPlane;
+
+    }
+    public static ItemStack itemKiyanka() {
+        ItemStack kiyanka = new ItemStack(Material.IRON_HOE, 1);
+
+        ItemMeta kiyankaMeta = kiyanka.getItemMeta();
+
+        kiyankaMeta.setDisplayName("Киянка");
+
+        kiyankaMeta.setLore(Collections.singletonList("20 Дерева"));
+
+        kiyanka.setItemMeta(kiyankaMeta);
+        return kiyanka;
+    }
+    public static ItemStack itemChest(){
+        ArrayList chestLore = new ArrayList();
+        chestLore.add("40 Дерева");
+        chestLore.add("10 Железа");
+
+        ItemStack chest = new ItemStack(Material.CHEST, 1);
+
+        ItemMeta chestMeta = chest.getItemMeta();
+
+
+        chestMeta.setDisplayName("Сундук");
+
+
+        chestMeta.setLore(chestLore);
+
+
+        chest.setItemMeta(chestMeta);
+
+        return chest;
+
+
+    }
+    public static ItemStack itemStoneAxe(){
+        ArrayList stoneAxeLore = new ArrayList();
+        stoneAxeLore.add("30 Дерева");
+        stoneAxeLore.add("15 Камня");
+
+        ItemStack stoneAxe = new ItemStack(Material.STONE_AXE, 1);
+
+        ItemMeta stoneAxeMeta = stoneAxe.getItemMeta();
+
+        stoneAxeMeta.setDisplayName("Каменный топор");
+
+        stoneAxeMeta.setLore(stoneAxeLore);
+
+        stoneAxe.setItemMeta(stoneAxeMeta);
+        return stoneAxe;
+    }
+    public static ItemStack itemStonePickAxe(){
+        ArrayList stonePickAxeLore = new ArrayList();
+        stonePickAxeLore.add("30 Дерева");
+        stonePickAxeLore.add("15 Камня");
+
+        ItemStack stonePickAxe = new ItemStack(Material.STONE_PICKAXE, 1);
+
+        ItemMeta stonePickAxeMeta = stonePickAxe.getItemMeta();
+
+        stonePickAxeMeta.setDisplayName("Каменная кирка");
+
+        stonePickAxeMeta.setLore(stonePickAxeLore);
+
+        stonePickAxe.setItemMeta(stonePickAxeMeta);
+        return stonePickAxe;
+    }
+    public static ItemStack itemMetalDoor(){
+        ItemStack metalDoor = new ItemStack(Material.DARK_OAK_DOOR_ITEM, 1);
+
+        ItemMeta metalDoorMeta = metalDoor.getItemMeta();
+
+        metalDoorMeta.setDisplayName("Железная дверь");
+
+        metalDoorMeta.setLore(Collections.singletonList("20 Металлических фрагментов"));
+
+        metalDoor.setItemMeta(metalDoorMeta);
+        return metalDoor;
+    }
+    public static ItemStack itemHeavyDoor(){
+        ArrayList heavyDoorLore = new ArrayList();
+        heavyDoorLore.add("10 МВК");
+        heavyDoorLore.add("5 шестеренок");
+
+        ItemStack heavyDoor = new ItemStack(Material.JUNGLE_DOOR_ITEM, 1);
+
+
+        ItemMeta heavyDoorMeta = heavyDoor.getItemMeta();
+
+        heavyDoorMeta.setDisplayName("Бронированная дверь");
+
+        heavyDoorMeta.setLore(heavyDoorLore);
+
+        heavyDoor.setItemMeta(heavyDoorMeta);
+        return heavyDoor;
+    }
+
+    //ресурсы
+    public static ItemStack resourceWood(){
+        ItemStack wood = new ItemStack(Material.LOG);
+        ItemMeta meta = wood.getItemMeta();
+        meta.setDisplayName("Дерево");
+        wood.setItemMeta(meta);
+        return wood;
+    }
 }
-
-
-
-
 

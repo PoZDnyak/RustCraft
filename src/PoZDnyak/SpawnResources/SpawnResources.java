@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class SpawnResources implements Listener {
+public class  SpawnResources implements Listener {
     private static Plugin plugin;
     public SpawnResources(Main plugin) {
         this.plugin = plugin;

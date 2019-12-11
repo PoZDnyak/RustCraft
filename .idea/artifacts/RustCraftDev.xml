@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="RustCraftDev">
-    <output-path>W:/Servers/1.7.10/plugins</output-path>
+    <output-path>W:/Servers/1.12.2/plugins</output-path>
     <root id="archive" name="RustCraftDev.jar">
       <element id="module-output" name="RustCraftDEV" />
     </root>
